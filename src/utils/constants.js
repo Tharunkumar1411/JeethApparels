@@ -1,9 +1,9 @@
 export const ROUTES = {
   LOGIN: '/login',
-  MERCHANTS: '/merchants',
-  ADD_MERCHANT: '/merchants/new',
-  MERCHANT_DETAIL: (id = ':id') => `/merchants/${id}`,
-  EDIT_MERCHANT: (id = ':id') => `/merchants/${id}/edit`,
+  MERCHANTS: '/stores',
+  ADD_MERCHANT: '/stores/new',
+  MERCHANT_DETAIL: (id = ':id') => `/stores/${id}`,
+  EDIT_MERCHANT: (id = ':id') => `/stores/${id}/edit`,
 };
 
 export const MERCHANT_STATUS = [

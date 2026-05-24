@@ -24,8 +24,8 @@ import { ROUTES } from '../utils/constants';
 const DRAWER_WIDTH = 240;
 
 const NAV_ITEMS = [
-  { label: 'Merchants', icon: <StorefrontIcon />, path: ROUTES.MERCHANTS },
-  { label: 'Add Merchant', icon: <AddBusinessIcon />, path: ROUTES.ADD_MERCHANT },
+  { label: 'Stores', icon: <StorefrontIcon />, path: ROUTES.MERCHANTS },
+  { label: 'Add Store', icon: <AddBusinessIcon />, path: ROUTES.ADD_MERCHANT },
 ];
 
 export default function ProtectedLayout() {
@@ -48,7 +48,7 @@ export default function ProtectedLayout() {
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       <Toolbar>
         <Typography variant="h6" fontWeight={700}>
-          Merchant Admin
+          Store Admin
         </Typography>
       </Toolbar>
       <List sx={{ flexGrow: 1 }}>

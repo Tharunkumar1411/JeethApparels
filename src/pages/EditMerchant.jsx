@@ -47,7 +47,7 @@ export default function EditMerchant() {
   }
 
   if (!merchant) {
-    return <Alert severity="warning">Merchant not found.</Alert>;
+    return <Alert severity="warning">Store not found.</Alert>;
   }
 
   return (
@@ -57,12 +57,12 @@ export default function EditMerchant() {
         onClick={() => navigate(ROUTES.MERCHANT_DETAIL(id))}
         sx={{ mb: 1, ml: -1 }}
       >
-        Back to merchant
+        Back to store
       </Button>
 
       <PageHeader
         title={`Edit ${merchant.store_name}`}
-        subtitle="Update the merchant's profile. Documents and referral code are managed on the detail page."
+        subtitle="Update the store's profile. Documents and referral code are managed on the detail page."
       />
 
       <MerchantForm

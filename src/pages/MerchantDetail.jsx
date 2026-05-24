@@ -68,7 +68,7 @@ export default function MerchantDetail() {
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Delete this merchant? This cannot be undone.')) return;
+    if (!window.confirm('Delete this store? This cannot be undone.')) return;
     await deleteMerchant.mutateAsync(id);
     navigate(ROUTES.MERCHANTS, { replace: true });
   };
@@ -86,7 +86,7 @@ export default function MerchantDetail() {
   }
 
   if (!merchant) {
-    return <Alert severity="warning">Merchant not found.</Alert>;
+    return <Alert severity="warning">Store not found.</Alert>;
   }
 
   return (
@@ -96,7 +96,7 @@ export default function MerchantDetail() {
         onClick={() => navigate(ROUTES.MERCHANTS)}
         sx={{ mb: 1, ml: -1 }}
       >
-        Back to merchants
+        Back to stores
       </Button>
 
       <PageHeader
@@ -247,7 +247,7 @@ export default function MerchantDetail() {
                 color="text.secondary"
                 sx={{ mb: 2 }}
               >
-                Permanently delete this merchant. Uploaded documents are
+                Permanently delete this store. Uploaded documents are
                 removed from the bucket as part of the delete.
               </Typography>
               <Button
@@ -256,7 +256,7 @@ export default function MerchantDetail() {
                 onClick={handleDelete}
                 disabled={deleteMerchant.isPending}
               >
-                {deleteMerchant.isPending ? 'Deleting…' : 'Delete merchant'}
+                {deleteMerchant.isPending ? 'Deleting…' : 'Delete store'}
               </Button>
             </CardContent>
           </Card>

@@ -22,16 +22,16 @@ export default function AddMerchant() {
         onClick={() => navigate(ROUTES.MERCHANTS)}
         sx={{ mb: 1, ml: -1 }}
       >
-        Back to merchants
+        Back to stores
       </Button>
 
       <PageHeader
-        title="Add Merchant"
+        title="Add Store"
         subtitle="Create the store record. Upload documents and view the referral code on the next screen."
       />
 
       <MerchantForm
-        submitLabel="Create merchant"
+        submitLabel="Create store"
         onSubmit={handleSubmit}
         onCancel={() => navigate(ROUTES.MERCHANTS)}
       />

@@ -20,7 +20,7 @@ export default function NotFound() {
           The page you’re looking for doesn’t exist.
         </Typography>
         <Button variant="contained" onClick={() => navigate(ROUTES.MERCHANTS)}>
-          Go to merchants
+          Go to stores
         </Button>
       </Stack>
     </Box>

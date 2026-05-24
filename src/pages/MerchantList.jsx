@@ -43,15 +43,15 @@ export default function MerchantList() {
   return (
     <Box>
       <PageHeader
-        title="Merchants"
-        subtitle="Manage merchants and their referral codes"
+        title="Stores"
+        subtitle="Manage stores and their referral codes"
         actions={
           <Button
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => navigate(ROUTES.ADD_MERCHANT)}
           >
-            Add Merchant
+            Add Store
           </Button>
         }
       />
@@ -109,7 +109,7 @@ export default function MerchantList() {
                         color="text.secondary"
                         sx={{ py: 4 }}
                       >
-                        No merchants found.
+                        No stores found.
                       </Typography>
                     </TableCell>
                   </TableRow>

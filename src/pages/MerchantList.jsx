@@ -34,7 +34,7 @@ export default function MerchantList() {
     const q = search.trim().toLowerCase();
     if (!q) return merchants;
     return merchants.filter((m) =>
-      [m.store_name, m.mobile, m.city, m.state, m.email, m.referral_code]
+      [m.store_name, m.owner_name, m.mobile, m.city, m.state, m.email, m.referral_code]
         .filter(Boolean)
         .some((v) => String(v).toLowerCase().includes(q))
     );
@@ -63,7 +63,7 @@ export default function MerchantList() {
           sx={{ mb: 2 }}
         >
           <TextField
-            placeholder="Search by store, mobile, city, or code"
+            placeholder="Search by store, owner, mobile, city, or code"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             fullWidth
@@ -92,6 +92,7 @@ export default function MerchantList() {
               <TableHead>
                 <TableRow>
                   <TableCell>Store</TableCell>
+                  <TableCell>Owner</TableCell>
                   <TableCell>Mobile</TableCell>
                   <TableCell>City</TableCell>
                   <TableCell>State</TableCell>
@@ -102,7 +103,7 @@ export default function MerchantList() {
               <TableBody>
                 {filtered.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={6}>
+                    <TableCell colSpan={7}>
                       <Typography
                         align="center"
                         color="text.secondary"
@@ -121,6 +122,7 @@ export default function MerchantList() {
                     onClick={() => navigate(ROUTES.MERCHANT_DETAIL(m.id))}
                   >
                     <TableCell>{m.store_name}</TableCell>
+                    <TableCell>{m.owner_name || '—'}</TableCell>
                     <TableCell>{m.mobile}</TableCell>
                     <TableCell>{m.city}</TableCell>
                     <TableCell>{m.state}</TableCell>

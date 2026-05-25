@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   AppBar,
   Box,
@@ -9,6 +9,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Stack,
   Toolbar,
   Typography,
   useMediaQuery,
@@ -20,7 +21,7 @@ import { useTheme } from '@mui/material/styles';
 import { signOut } from '../services/auth';
 import { ROUTES } from '../utils/constants';
 
-const DRAWER_WIDTH = 240;
+const DRAWER_WIDTH = 248;
 
 const NAV_ITEMS = [
   { label: 'Stores', icon: <StorefrontIcon />, path: ROUTES.MERCHANTS },
@@ -30,6 +31,7 @@ export default function ProtectedLayout() {
   const theme = useTheme();
   const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleNav = (path) => {
@@ -42,27 +44,86 @@ export default function ProtectedLayout() {
     navigate(ROUTES.LOGIN, { replace: true });
   };
 
+  const isSelected = (path) =>
+    path === ROUTES.MERCHANTS
+      ? location.pathname.startsWith('/stores')
+      : location.pathname === path;
+
   const drawerContent = (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-      <Toolbar>
-        <Typography variant="h6" fontWeight={700}>
-          Store Admin
-        </Typography>
-      </Toolbar>
-      <List sx={{ flexGrow: 1 }}>
+      <Box
+        sx={{
+          px: 3,
+          py: 3,
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+        }}
+      >
+        <Stack direction="row" spacing={1.5} alignItems="center">
+          <Box
+            sx={{
+              width: 36,
+              height: 36,
+              borderRadius: 2,
+              bgcolor: 'primary.main',
+              color: 'primary.contrastText',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontFamily: '"DM Serif Display", serif',
+              fontSize: '1.25rem',
+              lineHeight: 1,
+            }}
+          >
+            J
+          </Box>
+          <Box>
+            <Typography
+              variant="h6"
+              sx={{
+                fontFamily: '"DM Serif Display", serif',
+                fontSize: '1.15rem',
+                lineHeight: 1.1,
+              }}
+            >
+              Jeeth Apparels
+            </Typography>
+            <Typography
+              variant="overline"
+              color="text.secondary"
+              sx={{ lineHeight: 1.4 }}
+            >
+              Admin
+            </Typography>
+          </Box>
+        </Stack>
+      </Box>
+
+      <List sx={{ flexGrow: 1, pt: 1 }}>
         {NAV_ITEMS.map((item) => (
-          <ListItemButton key={item.path} onClick={() => handleNav(item.path)}>
+          <ListItemButton
+            key={item.path}
+            selected={isSelected(item.path)}
+            onClick={() => handleNav(item.path)}
+          >
             <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.label} />
+            <ListItemText
+              primary={item.label}
+              primaryTypographyProps={{ fontWeight: 600 }}
+            />
           </ListItemButton>
         ))}
       </List>
-      <List>
+
+      <List sx={{ pb: 1 }}>
         <ListItemButton onClick={handleLogout}>
           <ListItemIcon>
             <LogoutIcon />
           </ListItemIcon>
-          <ListItemText primary="Log out" />
+          <ListItemText
+            primary="Log out"
+            primaryTypographyProps={{ fontWeight: 600 }}
+          />
         </ListItemButton>
       </List>
     </Box>
@@ -73,10 +134,12 @@ export default function ProtectedLayout() {
       <AppBar
         position="fixed"
         color="inherit"
+        elevation={0}
         sx={{
           width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
           ml: { md: `${DRAWER_WIDTH}px` },
-          boxShadow: '0 1px 0 rgba(16,24,40,0.06)',
+          borderBottom: '1px solid',
+          borderColor: 'divider',
         }}
       >
         <Toolbar>
@@ -87,8 +150,15 @@ export default function ProtectedLayout() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Admin Panel
+          <Typography
+            variant="h6"
+            sx={{
+              flexGrow: 1,
+              fontFamily: '"DM Serif Display", serif',
+              fontSize: '1.1rem',
+            }}
+          >
+            Jeeth Apparels
           </Typography>
         </Toolbar>
       </AppBar>
@@ -126,7 +196,7 @@ export default function ProtectedLayout() {
         sx={{
           flexGrow: 1,
           width: { md: `calc(100% - ${DRAWER_WIDTH}px)` },
-          p: { xs: 2, sm: 3 },
+          p: { xs: 2, sm: 3, md: 4 },
         }}
       >
         <Toolbar />

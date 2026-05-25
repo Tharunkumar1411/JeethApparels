@@ -136,12 +136,18 @@ export default function MerchantDetail() {
         title={merchant.store_name}
         subtitle={`${merchant.city}, ${merchant.state}`}
         actions={
-          <Stack direction="row" spacing={1} alignItems="center">
+          <Stack
+            direction={{ xs: 'row', sm: 'row' }}
+            spacing={1}
+            alignItems="center"
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
+          >
             <StatusChip status={merchant.status} />
             <Button
               variant="outlined"
               startIcon={<EditIcon />}
               onClick={() => navigate(ROUTES.EDIT_MERCHANT(id))}
+              sx={{ ml: 'auto', flexShrink: 0 }}
             >
               Edit
             </Button>
@@ -151,27 +157,61 @@ export default function MerchantDetail() {
 
       <Stack spacing={3}>
         {/* Referral hero */}
-        <Card>
-          <CardContent>
-            <Stack spacing={2}>
+        <Card
+          sx={{
+            position: 'relative',
+            overflow: 'hidden',
+            border: 'none',
+            background:
+              'linear-gradient(135deg, #fdf3ec 0%, #f5e3d4 55%, #ead0b9 100%)',
+            boxShadow:
+              '0 1px 2px rgba(43,24,16,0.04), 0 10px 30px rgba(201,123,94,0.15)',
+          }}
+        >
+          <Box
+            aria-hidden
+            sx={{
+              position: 'absolute',
+              top: -60,
+              right: -60,
+              width: 200,
+              height: 200,
+              borderRadius: '50%',
+              bgcolor: 'rgba(255,255,255,0.45)',
+              filter: 'blur(40px)',
+              pointerEvents: 'none',
+            }}
+          />
+          <CardContent sx={{ position: 'relative', p: { xs: 2.5, sm: 4 } }}>
+            <Typography variant="overline" color="primary.dark">
+              Referral
+            </Typography>
+            <Stack spacing={3} sx={{ mt: 1 }}>
               <Stack
                 direction={{ xs: 'column', sm: 'row' }}
                 spacing={2}
-                alignItems={{ sm: 'center' }}
+                alignItems={{ sm: 'flex-end' }}
                 justifyContent="space-between"
               >
-                <Box>
-                  <Typography variant="caption" color="text.secondary">
-                    Referral code
+                <Box sx={{ minWidth: 0 }}>
+                  <Typography
+                    variant="caption"
+                    color="text.secondary"
+                    sx={{ textTransform: 'uppercase', letterSpacing: '0.08em' }}
+                  >
+                    Code
                   </Typography>
                   <Typography
-                    component="code"
+                    component="div"
                     sx={{
-                      display: 'block',
-                      fontFamily: 'monospace',
-                      fontSize: '1.5rem',
-                      fontWeight: 600,
-                      mt: 0.5,
+                      fontFamily: '"DM Serif Display", serif',
+                      fontSize: { xs: '2rem', sm: '2.75rem' },
+                      fontWeight: 400,
+                      lineHeight: 1.1,
+                      letterSpacing: '0.04em',
+                      color: 'secondary.main',
+                      mt: 0.25,
+                      wordBreak: 'break-word',
                     }}
                   >
                     {merchant.referral_code}
@@ -187,43 +227,66 @@ export default function MerchantDetail() {
                 </Button>
               </Stack>
 
-              <Divider />
-
-              <Stack
-                direction={{ xs: 'column', sm: 'row' }}
-                spacing={2}
-                alignItems={{ sm: 'center' }}
-                justifyContent="space-between"
+              <Box
+                sx={{
+                  p: 2,
+                  borderRadius: 2,
+                  bgcolor: 'rgba(255,255,255,0.65)',
+                  border: '1px solid',
+                  borderColor: 'rgba(255,255,255,0.9)',
+                  backdropFilter: 'blur(6px)',
+                }}
               >
-                <Box sx={{ minWidth: 0, flexGrow: 1 }}>
-                  <Typography variant="caption" color="text.secondary">
-                    Referral link
-                  </Typography>
-                  <Typography
-                    component="a"
-                    href={referralLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                <Stack
+                  direction={{ xs: 'column', sm: 'row' }}
+                  spacing={1.5}
+                  alignItems={{ sm: 'center' }}
+                  justifyContent="space-between"
+                >
+                  <Box sx={{ minWidth: 0, flexGrow: 1 }}>
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.08em',
+                      }}
+                    >
+                      Shareable link
+                    </Typography>
+                    <Typography
+                      component="a"
+                      href={referralLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{
+                        display: 'block',
+                        mt: 0.25,
+                        color: 'primary.dark',
+                        wordBreak: 'break-all',
+                        fontSize: '0.9rem',
+                        fontWeight: 500,
+                        textDecoration: 'none',
+                        '&:hover': { textDecoration: 'underline' },
+                      }}
+                    >
+                      {referralLink}
+                    </Typography>
+                  </Box>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    startIcon={<ContentCopyIcon />}
+                    onClick={() => handleCopy(referralLink, 'link')}
                     sx={{
-                      display: 'block',
-                      mt: 0.5,
-                      color: 'primary.main',
-                      wordBreak: 'break-all',
-                      fontSize: '0.95rem',
+                      alignSelf: { xs: 'stretch', sm: 'auto' },
+                      bgcolor: 'background.paper',
                     }}
                   >
-                    {referralLink}
-                  </Typography>
-                </Box>
-                <Button
-                  variant="outlined"
-                  startIcon={<ContentCopyIcon />}
-                  onClick={() => handleCopy(referralLink, 'link')}
-                  sx={{ alignSelf: { xs: 'stretch', sm: 'auto' } }}
-                >
-                  {copiedField === 'link' ? 'Copied' : 'Copy link'}
-                </Button>
-              </Stack>
+                    {copiedField === 'link' ? 'Copied' : 'Copy link'}
+                  </Button>
+                </Stack>
+              </Box>
             </Stack>
           </CardContent>
         </Card>
@@ -232,7 +295,11 @@ export default function MerchantDetail() {
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: { xs: '1fr', md: '7fr 5fr' },
+            gridTemplateColumns: {
+              xs: '1fr',
+              md: '6fr 4fr',
+              lg: '7fr 5fr',
+            },
             gap: { xs: 2, sm: 3 },
           }}
         >
@@ -389,7 +456,7 @@ export default function MerchantDetail() {
                   sm: '1fr 1fr',
                   md: '1fr 1fr 1fr',
                 },
-                gap: 2,
+                gap: { xs: 1.5, sm: 2 },
               }}
             >
               {DOC_SLOTS.map((slot) => (
@@ -451,7 +518,7 @@ function DocSlot({ merchantId, kind, label, path, accept }) {
             <>
               <Box
                 sx={{
-                  height: 140,
+                  height: { xs: 120, sm: 140 },
                   bgcolor: 'background.default',
                   borderRadius: 1,
                   overflow: 'hidden',

@@ -79,7 +79,7 @@ export default function MerchantForm({
   };
 
   return (
-    <Box sx={{ pb: { xs: 10, sm: 0 } }}>
+    <Box sx={{ pb: { xs: 14, sm: 0 } }}>
       <Card>
         <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
           <Stack
@@ -202,6 +202,9 @@ export default function MerchantForm({
                     onChange={(_, v) => field.onChange(v ?? '')}
                     onInputChange={(_, v) => field.onChange(v ?? '')}
                     disabled={!watchedState}
+                    slotProps={{
+                      popper: { sx: { maxWidth: '100vw' } },
+                    }}
                     renderInput={(params) => (
                       <TextField
                         {...params}
@@ -219,7 +222,10 @@ export default function MerchantForm({
               />
             </Stack>
 
-            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2.5}>
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={{ xs: 1.5, sm: 2.5 }}
+            >
               <TextField
                 label="Pincode"
                 type="tel"
@@ -292,7 +298,9 @@ export default function MerchantForm({
           bottom: 0,
           left: 0,
           right: 0,
-          p: 1.5,
+          px: 1.5,
+          pt: 1.5,
+          pb: 'calc(12px + env(safe-area-inset-bottom))',
           gap: 1,
           borderRadius: 0,
           borderTop: 1,

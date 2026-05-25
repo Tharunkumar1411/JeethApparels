@@ -5,6 +5,8 @@ import {
   Box,
   Button,
   Card,
+  CardActionArea,
+  CardContent,
   CircularProgress,
   MenuItem,
   Stack,
@@ -19,7 +21,9 @@ import {
   Tabs,
   TextField,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
 import PageHeader from '../components/PageHeader.jsx';
 import StatusChip from '../components/StatusChip.jsx';
@@ -46,8 +50,16 @@ function formatDate(dt) {
   return new Date(dt).toLocaleString();
 }
 
+function formatDateShort(dt) {
+  if (!dt) return '—';
+  return new Date(dt).toLocaleDateString();
+}
+
 export default function MerchantList() {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const isDesktop = useMediaQuery(theme.breakpoints.up('md'));
+
   const [tab, setTab] = useState(0); // 0 = Active, 1 = Inactive
   const [filters, setFilters] = useState(EMPTY_FILTERS);
   const [debouncedFilters, setDebouncedFilters] = useState(EMPTY_FILTERS);
@@ -60,7 +72,6 @@ export default function MerchantList() {
     return () => clearTimeout(t);
   }, [filters]);
 
-  // Reset to page 0 when anything that changes the result set changes.
   useEffect(() => {
     setPage(0);
   }, [tab, debouncedFilters, sortValue, pageSize]);
@@ -80,6 +91,8 @@ export default function MerchantList() {
   const handleFilter = (key) => (e) =>
     setFilters((prev) => ({ ...prev, [key]: e.target.value }));
 
+  const goToDetail = (id) => navigate(ROUTES.MERCHANT_DETAIL(id));
+
   return (
     <Box>
       <PageHeader
@@ -96,7 +109,7 @@ export default function MerchantList() {
         }
       />
 
-      <Card sx={{ p: { xs: 2, sm: 3 } }}>
+      <Card sx={{ p: { xs: 1.5, sm: 3 } }}>
         <Tabs
           value={tab}
           onChange={(_, v) => setTab(v)}
@@ -111,8 +124,9 @@ export default function MerchantList() {
             display: 'grid',
             gridTemplateColumns: {
               xs: '1fr',
-              sm: '1fr 1fr',
-              md: 'repeat(5, 1fr)',
+              sm: 'repeat(2, 1fr)',
+              md: 'repeat(3, 1fr)',
+              lg: 'repeat(5, 1fr)',
             },
             gap: 1.5,
             mb: 2,
@@ -152,10 +166,12 @@ export default function MerchantList() {
         </Box>
 
         <Stack
-          direction={{ xs: 'column', sm: 'row' }}
+          direction="row"
           spacing={1}
+          rowGap={1}
+          flexWrap="wrap"
           justifyContent="space-between"
-          alignItems={{ sm: 'center' }}
+          alignItems="center"
           sx={{ mb: 2 }}
         >
           <Typography variant="caption" color="text.secondary">
@@ -167,7 +183,7 @@ export default function MerchantList() {
             label="Sort"
             value={sortValue}
             onChange={(e) => setSortValue(e.target.value)}
-            sx={{ minWidth: 220 }}
+            sx={{ minWidth: { xs: 160, sm: 220 } }}
           >
             {SORT_OPTIONS.map((opt) => (
               <MenuItem key={opt.value} value={opt.value}>
@@ -183,72 +199,129 @@ export default function MerchantList() {
           </Alert>
         )}
 
-        <TableContainer sx={{ overflowX: 'auto' }}>
-          <Table size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>Store</TableCell>
-                <TableCell>Owner</TableCell>
-                <TableCell>Mobile</TableCell>
-                <TableCell>City</TableCell>
-                <TableCell>State</TableCell>
-                <TableCell>Referral</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Created</TableCell>
-                <TableCell>Updated</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {isLoading && (
+        {isLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', py: 6 }}>
+            <CircularProgress size={28} />
+          </Box>
+        ) : rows.length === 0 ? (
+          <Box sx={{ textAlign: 'center', py: 6 }}>
+            <Typography color="text.secondary">No stores found.</Typography>
+          </Box>
+        ) : isDesktop ? (
+          <TableContainer sx={{ overflowX: 'auto' }}>
+            <Table size="small">
+              <TableHead>
                 <TableRow>
-                  <TableCell colSpan={9} align="center" sx={{ py: 4 }}>
-                    <CircularProgress size={24} />
-                  </TableCell>
+                  <TableCell>Store</TableCell>
+                  <TableCell>Owner</TableCell>
+                  <TableCell>Mobile</TableCell>
+                  <TableCell>City</TableCell>
+                  <TableCell>State</TableCell>
+                  <TableCell>Referral</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>Created</TableCell>
+                  <TableCell>Updated</TableCell>
                 </TableRow>
-              )}
-              {!isLoading && rows.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={9} align="center" sx={{ py: 4 }}>
-                    <Typography color="text.secondary">No stores found.</Typography>
-                  </TableCell>
-                </TableRow>
-              )}
-              {rows.map((m) => (
-                <TableRow
-                  key={m.id}
-                  hover
-                  sx={{ cursor: 'pointer' }}
-                  onClick={() => navigate(ROUTES.MERCHANT_DETAIL(m.id))}
-                >
-                  <TableCell>{m.store_name}</TableCell>
-                  <TableCell>{m.owner_name || '—'}</TableCell>
-                  <TableCell>{m.mobile}</TableCell>
-                  <TableCell>{m.city}</TableCell>
-                  <TableCell>{m.state}</TableCell>
-                  <TableCell>
-                    <Typography
-                      component="code"
-                      sx={{
-                        fontFamily: 'monospace',
-                        bgcolor: 'background.default',
-                        px: 1,
-                        py: 0.25,
-                        borderRadius: 1,
-                      }}
+              </TableHead>
+              <TableBody>
+                {rows.map((m) => (
+                  <TableRow
+                    key={m.id}
+                    hover
+                    sx={{ cursor: 'pointer' }}
+                    onClick={() => goToDetail(m.id)}
+                  >
+                    <TableCell>{m.store_name}</TableCell>
+                    <TableCell>{m.owner_name || '—'}</TableCell>
+                    <TableCell>{m.mobile}</TableCell>
+                    <TableCell>{m.city}</TableCell>
+                    <TableCell>{m.state}</TableCell>
+                    <TableCell>
+                      <Typography
+                        component="code"
+                        sx={{
+                          fontFamily: 'monospace',
+                          bgcolor: 'background.default',
+                          px: 1,
+                          py: 0.25,
+                          borderRadius: 1,
+                        }}
+                      >
+                        {m.referral_code}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <StatusChip status={m.status} />
+                    </TableCell>
+                    <TableCell>{formatDate(m.created_at)}</TableCell>
+                    <TableCell>{formatDate(m.updated_at)}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : (
+          <Stack spacing={1.5}>
+            {rows.map((m) => (
+              <Card key={m.id} variant="outlined">
+                <CardActionArea onClick={() => goToDetail(m.id)}>
+                  <CardContent>
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      alignItems="flex-start"
+                      justifyContent="space-between"
+                      sx={{ mb: 0.5 }}
                     >
-                      {m.referral_code}
+                      <Typography
+                        variant="subtitle1"
+                        sx={{
+                          fontWeight: 600,
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                          minWidth: 0,
+                          flexGrow: 1,
+                        }}
+                      >
+                        {m.store_name}
+                      </Typography>
+                      <StatusChip status={m.status} />
+                    </Stack>
+                    <Typography variant="body2" color="text.secondary">
+                      {(m.owner_name || '—') + ' · ' + m.mobile}
                     </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <StatusChip status={m.status} />
-                  </TableCell>
-                  <TableCell>{formatDate(m.created_at)}</TableCell>
-                  <TableCell>{formatDate(m.updated_at)}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                    <Typography variant="caption" color="text.secondary" display="block">
+                      {m.city}, {m.state}
+                    </Typography>
+                    <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 1 }}>
+                      <Typography
+                        component="code"
+                        sx={{
+                          fontFamily: 'monospace',
+                          bgcolor: 'background.default',
+                          px: 1,
+                          py: 0.25,
+                          borderRadius: 1,
+                          fontSize: '0.8rem',
+                        }}
+                      >
+                        {m.referral_code}
+                      </Typography>
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ ml: 'auto' }}
+                      >
+                        {formatDateShort(m.created_at)}
+                      </Typography>
+                    </Stack>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            ))}
+          </Stack>
+        )}
 
         <TablePagination
           component="div"
@@ -258,6 +331,15 @@ export default function MerchantList() {
           rowsPerPage={pageSize}
           onRowsPerPageChange={(e) => setPageSize(parseInt(e.target.value, 10))}
           rowsPerPageOptions={[20, 40, 60]}
+          SelectProps={{ native: !isDesktop }}
+          sx={{
+            '.MuiTablePagination-toolbar': {
+              flexWrap: 'wrap',
+              gap: 1,
+              px: { xs: 0, sm: 2 },
+            },
+            '.MuiTablePagination-spacer': { display: 'none' },
+          }}
         />
       </Card>
     </Box>

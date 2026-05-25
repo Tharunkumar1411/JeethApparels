@@ -56,23 +56,64 @@ export default function Login() {
         justifyContent: 'center',
         p: 2,
         bgcolor: 'background.default',
+        backgroundImage:
+          'radial-gradient(at 20% 10%, rgba(201,123,94,0.10), transparent 50%), radial-gradient(at 80% 90%, rgba(43,24,16,0.06), transparent 50%)',
       }}
     >
-      <Card sx={{ width: '100%', maxWidth: 420 }}>
-        <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
-          <Stack spacing={1} sx={{ mb: 3 }}>
-            <Typography variant="h1">Sign in</Typography>
-            <Typography variant="body2" color="text.secondary">
-              Internal admin access only.
-            </Typography>
-          </Stack>
-
-          <Stack
-            component="form"
-            onSubmit={handleSubmit(onSubmit)}
-            spacing={2}
-            noValidate
+      <Stack spacing={3} sx={{ width: '100%', maxWidth: 420 }}>
+        <Stack alignItems="center" spacing={1}>
+          <Box
+            sx={{
+              width: 56,
+              height: 56,
+              borderRadius: 3,
+              bgcolor: 'primary.main',
+              color: 'primary.contrastText',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontFamily: '"DM Serif Display", serif',
+              fontSize: '1.75rem',
+              boxShadow: '0 10px 28px rgba(201,123,94,0.35)',
+            }}
           >
+            J
+          </Box>
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: '"DM Serif Display", serif',
+              fontSize: '1.25rem',
+            }}
+          >
+            Jeeth Apparels
+          </Typography>
+          <Typography
+            variant="overline"
+            color="text.secondary"
+            sx={{ mt: -0.5 }}
+          >
+            Admin Panel
+          </Typography>
+        </Stack>
+
+        <Card sx={{ width: '100%' }}>
+          <CardContent sx={{ p: { xs: 3, sm: 4 } }}>
+            <Stack spacing={0.5} sx={{ mb: 3 }}>
+              <Typography variant="h1" sx={{ fontSize: '1.75rem' }}>
+                Welcome back
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                Sign in to manage stores and referral codes.
+              </Typography>
+            </Stack>
+
+            <Stack
+              component="form"
+              onSubmit={handleSubmit(onSubmit)}
+              spacing={2}
+              noValidate
+            >
             {serverError && <Alert severity="error">{serverError}</Alert>}
 
             <TextField
@@ -101,17 +142,18 @@ export default function Login() {
               helperText={errors.password?.message}
             />
 
-            <Button
-              type="submit"
-              variant="contained"
-              size="large"
-              disabled={submitting}
-            >
-              {submitting ? 'Signing in…' : 'Sign in'}
-            </Button>
-          </Stack>
-        </CardContent>
-      </Card>
+              <Button
+                type="submit"
+                variant="contained"
+                size="large"
+                disabled={submitting}
+              >
+                {submitting ? 'Signing in…' : 'Sign in'}
+              </Button>
+            </Stack>
+          </CardContent>
+        </Card>
+      </Stack>
     </Box>
   );
 }

@@ -21,16 +21,40 @@ create table if not exists public.merchants (
   pan_doc         text,
   aadhaar_doc     text,
   gst_doc         text,
+  voter_id_doc    text,
   referral_code   text        not null,
   status          boolean     not null default true,
   created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now(),
 
   constraint merchants_referral_code_key unique (referral_code)
 );
 
--- Helpful index for status filters on the admin list view
+-- Helpful indexes
 create index if not exists merchants_status_idx      on public.merchants (status);
 create index if not exists merchants_created_at_idx  on public.merchants (created_at desc);
+create index if not exists merchants_updated_at_idx  on public.merchants (updated_at desc);
+
+-- Mobile must be unique among ACTIVE stores. Inactive stores can share a number.
+create unique index if not exists merchants_mobile_active_unique
+  on public.merchants (mobile)
+  where status = true;
+
+-- Touch updated_at on every row update
+create or replace function public.set_updated_at()
+returns trigger
+language plpgsql
+as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+drop trigger if exists merchants_set_updated_at on public.merchants;
+create trigger merchants_set_updated_at
+  before update on public.merchants
+  for each row execute function public.set_updated_at();
 
 -- 3. Row Level Security -------------------------------------------------------
 alter table public.merchants enable row level security;

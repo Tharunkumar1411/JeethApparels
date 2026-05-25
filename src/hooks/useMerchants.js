@@ -8,12 +8,16 @@ import {
 } from '../services/merchants';
 
 const KEYS = {
-  all: ['merchants'],
+  list: (params) => ['merchants', 'list', params],
   detail: (id) => ['merchants', id],
 };
 
-export function useMerchantsQuery() {
-  return useQuery({ queryKey: KEYS.all, queryFn: listMerchants });
+export function useMerchantsQuery(params) {
+  return useQuery({
+    queryKey: KEYS.list(params),
+    queryFn: () => listMerchants(params),
+    keepPreviousData: true,
+  });
 }
 
 export function useMerchantQuery(id) {
@@ -28,7 +32,7 @@ export function useCreateMerchant() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: createMerchant,
-    onSuccess: () => qc.invalidateQueries({ queryKey: KEYS.all }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['merchants'] }),
   });
 }
 
@@ -37,7 +41,7 @@ export function useUpdateMerchant(id) {
   return useMutation({
     mutationFn: (updates) => updateMerchant(id, updates),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: KEYS.all });
+      qc.invalidateQueries({ queryKey: ['merchants'] });
       qc.invalidateQueries({ queryKey: KEYS.detail(id) });
     },
   });
@@ -47,6 +51,6 @@ export function useDeleteMerchant() {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: deleteMerchant,
-    onSuccess: () => qc.invalidateQueries({ queryKey: KEYS.all }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['merchants'] }),
   });
 }

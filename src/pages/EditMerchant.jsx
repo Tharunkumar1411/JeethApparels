@@ -28,7 +28,6 @@ export default function EditMerchant() {
       pincode: values.pincode,
       email: values.email || null,
       description: values.description || null,
-      referral_code: values.referralCode,
       status: values.status,
     });
     navigate(ROUTES.MERCHANT_DETAIL(id));

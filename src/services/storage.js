@@ -2,6 +2,7 @@ import { supabase } from './supabase';
 
 const BUCKET = 'merchant-docs';
 const TABLE = 'merchants';
+export const MAX_DOC_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
 
 // Column names on the merchants table that hold a storage path.
 export const DOC_KINDS = {
@@ -10,6 +11,7 @@ export const DOC_KINDS = {
   PAN: 'pan_doc',
   AADHAAR: 'aadhaar_doc',
   GST: 'gst_doc',
+  VOTER_ID: 'voter_id_doc',
 };
 
 export const DOC_LABELS = {
@@ -18,9 +20,14 @@ export const DOC_LABELS = {
   pan_doc: 'PAN',
   aadhaar_doc: 'Aadhaar',
   gst_doc: 'GST certificate',
+  voter_id_doc: 'Voter ID',
 };
 
 export async function uploadMerchantDoc(merchantId, kind, file) {
+  if (file.size > MAX_DOC_SIZE_BYTES) {
+    throw new Error('File must be 5 MB or smaller.');
+  }
+
   const ext = file.name.split('.').pop()?.toLowerCase() || 'bin';
   const path = `${merchantId}/${kind}-${Date.now()}.${ext}`;
 

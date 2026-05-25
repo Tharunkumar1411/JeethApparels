@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import StorefrontIcon from '@mui/icons-material/Storefront';
-import AddBusinessIcon from '@mui/icons-material/AddBusiness';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useTheme } from '@mui/material/styles';
 import { signOut } from '../services/auth';
@@ -25,7 +24,6 @@ const DRAWER_WIDTH = 240;
 
 const NAV_ITEMS = [
   { label: 'Stores', icon: <StorefrontIcon />, path: ROUTES.MERCHANTS },
-  { label: 'Add Store', icon: <AddBusinessIcon />, path: ROUTES.ADD_MERCHANT },
 ];
 
 export default function ProtectedLayout() {

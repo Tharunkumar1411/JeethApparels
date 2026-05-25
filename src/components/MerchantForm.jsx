@@ -27,7 +27,6 @@ const EMPTY_DEFAULTS = {
   pincode: '',
   email: '',
   description: '',
-  referralCode: '',
   status: 'true',
 };
 
@@ -43,7 +42,6 @@ function buildDefaults(merchant) {
     pincode: merchant.pincode ?? '',
     email: merchant.email ?? '',
     description: merchant.description ?? '',
-    referralCode: merchant.referral_code ?? '',
     status: String(merchant.status ?? true),
   };
 }
@@ -73,7 +71,6 @@ export default function MerchantForm({
     try {
       await onSubmit({
         ...values,
-        referralCode: values.referralCode.trim().toUpperCase(),
         status: values.status === 'true' || values.status === true,
       });
     } catch (err) {
@@ -122,12 +119,16 @@ export default function MerchantForm({
                 label="Mobile"
                 type="tel"
                 fullWidth
-                inputProps={{ inputMode: 'numeric', autoComplete: 'tel' }}
+                inputProps={{
+                  inputMode: 'numeric',
+                  autoComplete: 'tel',
+                  maxLength: 10,
+                }}
                 {...register('mobile', {
                   required: 'Mobile is required',
                   pattern: {
-                    value: /^[0-9+\-\s()]{7,15}$/,
-                    message: 'Enter a valid mobile number',
+                    value: /^[6-9]\d{9}$/,
+                    message: 'Must be 10 digits starting with 6, 7, 8, or 9',
                   },
                 })}
                 error={!!errors.mobile}
@@ -152,6 +153,8 @@ export default function MerchantForm({
             <TextField
               label="Store address"
               fullWidth
+              multiline
+              minRows={3}
               autoComplete="street-address"
               {...register('address', { required: 'Address is required' })}
               error={!!errors.address}
@@ -234,44 +237,19 @@ export default function MerchantForm({
                 helperText={errors.pincode?.message}
               />
               <TextField
-                label="Referral code"
+                select
+                label="Status"
                 fullWidth
-                inputProps={{ style: { textTransform: 'uppercase' } }}
-                {...register('referralCode', {
-                  required: 'Referral code is required',
-                  pattern: {
-                    value: /^[A-Za-z]+$/,
-                    message: 'Letters only, no spaces or numbers',
-                  },
-                  minLength: {
-                    value: 4,
-                    message: 'At least 4 letters',
-                  },
-                  maxLength: {
-                    value: 20,
-                    message: 'At most 20 letters',
-                  },
-                })}
-                error={!!errors.referralCode}
-                helperText={
-                  errors.referralCode?.message || 'Letters A–Z only. Must be unique.'
-                }
-              />
+                defaultValue={buildDefaults(merchant).status}
+                {...register('status')}
+              >
+                {MERCHANT_STATUS.map((opt) => (
+                  <MenuItem key={String(opt.value)} value={String(opt.value)}>
+                    {opt.label}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Stack>
-
-            <TextField
-              select
-              label="Status"
-              defaultValue={buildDefaults(merchant).status}
-              sx={{ maxWidth: { sm: '50%' } }}
-              {...register('status')}
-            >
-              {MERCHANT_STATUS.map((opt) => (
-                <MenuItem key={String(opt.value)} value={String(opt.value)}>
-                  {opt.label}
-                </MenuItem>
-              ))}
-            </TextField>
 
             <TextField
               label="Description (optional)"
